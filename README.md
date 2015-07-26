@@ -555,7 +555,7 @@ By now we've used jquery to manipulate the DOM, and used ruby to render some pre
 
 We can send asyncronous requests from javascript to our server, and then manipulate our page with any data we get back. Asyncronous means that we don't have to wait for the request to finish and we don't have to refresh the page. A text message is asyncronous communication, you can send one and forget about the conversation until you get one back. Calling someone on a phone is syncronous communication since you can't go anywhere untill the call is over and you hang up the phone.
 
-What type of functionality might we want to make asyncronous? There are plenty of 'upvote' and 'like' buttons on the Internet these days, while we aren't recording votes, our products do have a price. We could add a button that would allow us to update the button's price. 
+What type of functionality might we want to make asyncronous? There are plenty of 'upvote' and 'like' buttons on the Internet these days, while we aren't recording votes, our products do have a price. We could add a button that would allow us to update the button's price.
 
 First we'll build this functionality in normal synchronous way using page refreshes and links. We'll then re-build it asyncronously using javascript.
 
@@ -579,7 +579,7 @@ to this:
 
 We're tagging our price with the current product id so we can target it with javascript later. Next change your link that we added to increment the price to this:
 
-        <td><%= link_to "+", product_path(product), 
+        <td><%= link_to "+", product_path(product),
                 'data-incr-price' => product.id,  
                 :method           => :put %></td>
 
@@ -612,7 +612,7 @@ Refresh the page and try again, you should get "clicked" in the log, but it shou
         })
     </script>
 
-While this is shorter, it's less clear the intent of the code, so the first method is preferred. Now that we've intercepted our click, let's send our request using javascript. 
+While this is shorter, it's less clear the intent of the code, so the first method is preferred. Now that we've intercepted our click, let's send our request using javascript.
 
 
 First we will need a url to send data to. We can get this from our link, let's do that now:
@@ -628,7 +628,7 @@ First we will need a url to send data to. We can get this from our link, let's d
         })
     </script>
 
-You should see a url in your console when you refresh the page and click a `+` link. The variable `this` is similar to ruby's `self` it represents the current context. In this case `this` refers to the link we just clicked. So we can turn it into a jquery object `$(this)` and then get attributes from the object. In this case we want the url so we're grabbing the `href` attribute. All of that together gives us the url `url = $(this).attr('href')`. 
+You should see a url in your console when you refresh the page and click a `+` link. The variable `this` is similar to ruby's `self` it represents the current context. In this case `this` refers to the link we just clicked. So we can turn it into a jquery object `$(this)` and then get attributes from the object. In this case we want the url so we're grabbing the `href` attribute. All of that together gives us the url `url = $(this).attr('href')`.
 
 Now that we have the url we need to send out a request, to do that we will be using jQuery's [ajax method](http://api.jquery.com/jQuery.ajax/). To use it we can call `$.ajax()` and pass in options, you can get a list of options from the docs. First we'll want to pass in the url.
 
@@ -638,7 +638,7 @@ Now that we have the url we need to send out a request, to do that we will be us
           e.preventDefault();
           e.stopPropagation();
           url   = $(this).attr('href');
-          
+
           $.ajax({ url: url })
         })
     </script>
@@ -661,7 +661,7 @@ We successfully made a request with javascript, but there's some problems first 
           e.preventDefault();
           e.stopPropagation();
           url   = $(this).attr('href');
-          
+
           $.ajax({ url: url,
                    type: 'put',
                   })
@@ -695,7 +695,7 @@ So it looks like the @product was updated successfully and then we were redirect
           e.preventDefault();
           e.stopPropagation();
           url   = $(this).attr('href');
-          
+
           $.ajax({ url: url,
                    type: 'put',
                    dataType: 'json',
@@ -722,7 +722,7 @@ Notice that it is saying it is processing as JSON;
 
 So now that we've got the right action, we've need to send a new price. Our update action is looking for a hash of attributes named `product`, so if we want to update price, we'll need to update `params[:product][:price]`. We can send data with our `ajax()` request using the `data` option (again you can check the docs for available options). Before we can update the old price, we have to get the current price. To help out with this process we can add our price to our link as a data attribute like this:
 
-        <td><%= link_to "+", product_path(product), 
+        <td><%= link_to "+", product_path(product),
                 'data-price'      => product.price,
                 'data-incr-price' => product.id,  
                 :method           => :put %></td>
@@ -749,7 +749,7 @@ Now we can get our price using jQuery's `attr()` method:
 
 Before we add this to our ajax request we want to make sure that we've got the right value. Save, refresh, and click a link. You should see the price in your javascript console, if not double check your last steps.
 
-Once we've got our price we need to increment it. 
+Once we've got our price we need to increment it.
 
 
 
@@ -819,11 +819,11 @@ If you refresh the page, you'll see the price has changed. Awesome! We're most o
         newPrice = parseInt(price) + 1;
 
         console.log(location.protocol + "//" + location.host + url);
-        $.ajax({ url:   url, 
+        $.ajax({ url:   url,
                  type: 'put',
                  dataType: 'json',
                  data: { product: {price: newPrice} }
-               }).success(function(data, textStatus, jqXHR) { 
+               }).success(function(data, textStatus, jqXHR) {
                   console.log('done');
           });
         })
@@ -847,11 +847,11 @@ We can use the result directly:
         newPrice = parseInt(price) + 1;
 
         console.log(location.protocol + "//" + location.host + url);
-        $.ajax({ url:   url, 
+        $.ajax({ url:   url,
                  type: 'put',
                  dataType: 'json',
                  data: { product: {price: newPrice} }
-               }).success(function(data, textStatus, jqXHR) { 
+               }).success(function(data, textStatus, jqXHR) {
                 console.log(data);
                 console.log('id is:' + data.id);
                 console.log('price is:' + data.price);
@@ -872,11 +872,11 @@ Verify the contents of the data object and then we'll finally get around to upda
         price = $(this).attr('data-price');
         newPrice = parseInt(price) + 1;
 
-        $.ajax({ url:   url, 
+        $.ajax({ url:   url,
                  type: 'put',
                  dataType: 'json',
                  data: { product: {price: newPrice} }
-               }).success(function(data, textStatus, jqXHR) { 
+               }).success(function(data, textStatus, jqXHR) {
                 $('[data-product='+ data.id +']').html("$" + data.price);
           });
         })
@@ -896,27 +896,26 @@ We're almost done, promise. Do the save, refresh, & click dance. You should see 
         price = $(this).attr('data-price');
         newPrice = parseInt(price) + 1;
 
-        $.ajax({ url:   url, 
+        $.ajax({ url:   url,
                  type: 'put',
                  dataType: 'json',
                  data: { product: {price: newPrice} }
-               }).success(function(data, textStatus, jqXHR) { 
+               }).success(function(data, textStatus, jqXHR) {
                 $('[data-product='+ data.id +']').html("$" + data.price);
-                $('[data-incr-price='+ data.id +']').attr('data-price', data.price);   
+                $('[data-incr-price='+ data.id +']').attr('data-price', data.price);
           });
         })
     </script>
 
 
-Refresh for the last time and click the link. Now click it again. Did the price go up? Awesome! You're one step closer to asynchronous web domination. There are many ways different ways to accomplish this javascript request we just made, but the thought process should be the same. Click an element, intercept the click event, grab data from our DOM and make an asyncronous request. Make sure your URL, HTTP verb, and dataType are all set. Supply any data you want to, and finally attach some kind of success handler to the result. It seems a bit verbose, and it is...there are some simpler ways to accomplish this flow, but they just hide details from you...they're not actually simpler under the hood. 
+Refresh for the last time and click the link. Now click it again. Did the price go up? Awesome! You're one step closer to asynchronous web domination. There are many ways different ways to accomplish this javascript request we just made, but the thought process should be the same. Click an element, intercept the click event, grab data from our DOM and make an asyncronous request. Make sure your URL, HTTP verb, and dataType are all set. Supply any data you want to, and finally attach some kind of success handler to the result. It seems a bit verbose, and it is...there are some simpler ways to accomplish this flow, but they just hide details from you...they're not actually simpler under the hood.
 
 
 
 ## Fin
 
-To wrap it up, we got our hands dirty with jQuery and we got to manipulate the DOM. We played with the javascript console and learned quite a bit about this new strange language. We passed data from Ruby using ERB to javascript to make our chart visualization, and then we used javascript to make asynchronous requests to our Ruby server. THe most important parts of this exercise are understaning the core pieces of technology, and taking a very slow iterative approach to development. When I'm building javascript powered features, I typically build them without the javascript first (if possible), and then enhance them with javascript afterwards. This makes debugging a bit easier and gives you a working prototype while you're still developing the advanced version. 
+To wrap it up, we got our hands dirty with jQuery and we got to manipulate the DOM. We played with the javascript console and learned quite a bit about this new strange language. We passed data from Ruby using ERB to javascript to make our chart visualization, and then we used javascript to make asynchronous requests to our Ruby server. THe most important parts of this exercise are understaning the core pieces of technology, and taking a very slow iterative approach to development. When I'm building javascript powered features, I typically build them without the javascript first (if possible), and then enhance them with javascript afterwards. This makes debugging a bit easier and gives you a working prototype while you're still developing the advanced version.
 
 
 
-## 
-
+##
